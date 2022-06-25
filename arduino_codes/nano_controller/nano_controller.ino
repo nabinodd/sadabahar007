@@ -38,10 +38,16 @@ void setup()
 {
    pinMode(res_flup_pin, INPUT_PULLUP);
    pinMode(res_fldwn_pin, INPUT_PULLUP);
+   // PULLUP IN CKT
+   // pinMode(res_flup_pin, INPUT);
+   // pinMode(res_fldwn_pin, INPUT);
 
    pinMode(humifr_relay1_pin, OUTPUT);
    pinMode(humifr_relay2_pin, OUTPUT);
-
+   digitalWrite(humifr_relay1_pin, HIGH);
+   digitalWrite(humifr_relay2_pin, HIGH);
+   humifr_relay1_sts = true;
+   humifr_relay2_sts = true;
    Serial.begin(9600);
    dht.begin();
 }
@@ -87,6 +93,8 @@ bool updateFlsw()
 {
    bool fl_up = !digitalRead(res_flup_pin);
    bool fl_dwn = !digitalRead(res_fldwn_pin);
+   // bool fl_up = digitalRead(res_flup_pin);
+   // bool fl_dwn = digitalRead(res_fldwn_pin);
    if (fl_up)
       res_flup_on_count++;
    else
@@ -143,13 +151,15 @@ void loop()
          if (cmd == 1)
             Serial.println(String(res_flup_on_sts) + "," + String(res_fldwn_on_sts));
          else if (cmd == 2)
-            Serial.println(String(humifr_relay1_sts) + "," + String(humifr_relay2_sts));
+            Serial.println(String(!humifr_relay1_sts) + "," + String(!humifr_relay2_sts)); // triggred with negative logic
          else if (cmd == 3)
             Serial.println(String(co2) + "," + String(tmpr) + "," + String(humi));
          else if (cmd == 4)
-            setRelay(true, true);
-         else if (cmd == 5)
+            // setRelay(true, true); //chng for negative logic
             setRelay(false, false);
+         else if (cmd == 5)
+            // setRelay(false, false);
+            setRelay(true, true);
       }
    }
    if (updateDht())

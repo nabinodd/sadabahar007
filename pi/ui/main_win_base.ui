@@ -31,6 +31,9 @@
            <pointsize>40</pointsize>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color:green</string>
+         </property>
          <property name="text">
           <string>Sadabahar Krishi Mart</string>
          </property>

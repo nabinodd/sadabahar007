@@ -29,6 +29,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(40)
         self.lbl_h1.setFont(font)
+        self.lbl_h1.setStyleSheet("color:green")
         self.lbl_h1.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_h1.setObjectName("lbl_h1")
         self.verticalLayout.addWidget(self.lbl_h1)

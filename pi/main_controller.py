@@ -134,9 +134,9 @@ def nanoComm(serialport):
             flup_on_sts = bool(int(flsw_dataz[0]))
             fldwn_on_sts = bool(int(flsw_dataz[1]))
 
-            print(inf(),'co2 = ',co2,' Tmpr = ',tmpr,' Humi = ',humi)
-            print(inf(),'u_switch = ',flup_on_sts, ' d_switch = ',fldwn_on_sts)
-            print(inf(),'hfr1 = ',humifr_relay1_sts, ' hfr2 = ',humifr_relay2_sts,'\n')
+            # print(inf(),'co2 = ',co2,' Tmpr = ',tmpr,' Humi = ',humi)
+            # print(inf(),'u_switch = ',flup_on_sts, ' d_switch = ',fldwn_on_sts)
+            # print(inf(),'hfr1 = ',humifr_relay1_sts, ' hfr2 = ',humifr_relay2_sts,'\n')
 
             if send_rel_on:
                anano.write(b'4\r\n')

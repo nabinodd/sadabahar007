@@ -1,4 +1,6 @@
 #! /usr/bin/python
+import os
+os.chdir('/home/pi/codebase/local/sadabahar007/pi/')
 import time
 import serial
 import threading

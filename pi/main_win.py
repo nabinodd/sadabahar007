@@ -99,7 +99,9 @@ class Main_win_ui(qtw.QMainWindow):
 
    def updateData(self):
       global new_mqtt_data
+      togglecolor = True
       while True:
+         togglecolor = not togglecolor
          if new_mqtt_data:
             self.m_win.lbl_co2_val.setText(co2)
             self.m_win.lbl_tmpr_val.setText(tmpr)
@@ -108,14 +110,15 @@ class Main_win_ui(qtw.QMainWindow):
             flupsts = 'ON' if flup_sts == 'True' else 'OFF'
             fldwnsts = 'ON' if fldwn_sts == 'True' else 'OFF'
             humifr_relaysts = 'ON' if humifr_relay_sts == 'True' else 'OFF'
-   
+            running_color = "background-color: blue;" if togglecolor else "background-color: green;"
+            self.m_win.lbl_running.setStyleSheet(running_color)
             self.m_win.lbl_flup_val.setText(flupsts)
             self.m_win.lbl_fldwn_val.setText(fldwnsts)
             self.m_win.lbl_humifr_val.setText(humifr_relaysts)
    
 
             new_mqtt_data = False
-         time.sleep(1)
+         time.sleep(0.8)
 
    def setHumiActThres(self):
       inp_val = self.m_win.l_edt_humifr_act_thres.text()

@@ -57,6 +57,16 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QLabel" name="lbl_running">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -176,6 +186,15 @@
     </item>
     <item>
      <widget class="QFrame" name="frame_3">
+      <property name="font">
+       <font>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+        <strikeout>false</strikeout>
+        <kerning>true</kerning>
+       </font>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -190,6 +209,11 @@
            <property name="font">
             <font>
              <pointsize>20</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
             </font>
            </property>
           </widget>
@@ -199,6 +223,11 @@
            <property name="font">
             <font>
              <pointsize>15</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
             </font>
            </property>
            <property name="text">
@@ -238,6 +267,11 @@
            <property name="font">
             <font>
              <pointsize>20</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
             </font>
            </property>
           </widget>
@@ -247,6 +281,11 @@
            <property name="font">
             <font>
              <pointsize>15</pointsize>
+             <weight>50</weight>
+             <italic>false</italic>
+             <bold>false</bold>
+             <strikeout>false</strikeout>
+             <kerning>true</kerning>
             </font>
            </property>
            <property name="text">

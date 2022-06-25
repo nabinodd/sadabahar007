@@ -33,5 +33,6 @@ meta.create_all(engine)
 
 session.add(ParamsDb(parm = 'humifr_act_thres',val='60'))
 session.add(ParamsDb(parm= 'humifr_act_dur',val='120'))     
+session.add(ParamsDb(parm='pause_notif',val='True'))
 session.commit()
 print('COMMITTED @ ',time.time())

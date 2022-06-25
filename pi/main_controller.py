@@ -8,7 +8,7 @@ import paho.mqtt.client as mqtt
 
 from termcolor import colored
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, false
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 
@@ -23,15 +23,14 @@ Base = declarative_base()
 #get activation threshold and run duration from database
 hact_thres = int(session.query(ParamsDb.val).filter(ParamsDb.parm=='humifr_act_thres').all()[0][0])
 hact_dur = int(session.query(ParamsDb.val).filter(ParamsDb.parm=='humifr_act_dur').all()[0][0])
-pause_notif = bool(session.query(ParamsDb.val).filter(ParamsDb.parm=='pause_notif').all()[0][0])
-print('Pause notif : ',pause_notif, type(pause_notif))
+
 # mqtt_server = ('xetronixlnx.local', 1883, 5)
 # mqtt_server = ('coldpi.local', 1883, 5)
 
 mqtt_server = ('localhost', 1883, 5)
 
 
-notif_repeat_dur = 180
+notif_repeat_dur = 180  #notification repeat duration in seconds
 notif_pub_time = 0
 
 co2 = 0.0
@@ -43,7 +42,6 @@ fldwn_on_sts = False
 
 humifr_relay1_sts = False
 humifr_relay2_sts = False
-run_humi = False
 
 humifr_act_thres = hact_thres
 humifr_strt_time = 0
@@ -53,6 +51,13 @@ humifr_running = False
 
 relay_cmd = False
 send_relay_cmd = False
+
+def pauseNotif():
+   pause_notif = session.query(ParamsDb.val).filter(ParamsDb.parm=='pause_notif').all()[0][0]
+   if pause_notif == 'True':
+      return True
+   elif pause_notif =='False':
+      return False
 
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code "+str(rc))
@@ -65,7 +70,6 @@ def on_message(client, userdata, msg):
 
    if msg.topic == 'database/update_act_thres':
       humifr_act_thres = int(msg.payload.decode())
-
 
    if msg.topic == 'database/update_act_dur':
       humifr_act_durn = int(msg.payload.decode())
@@ -136,9 +140,9 @@ def nanoComm(serialport):
             flup_on_sts = bool(int(flsw_dataz[0]))
             fldwn_on_sts = bool(int(flsw_dataz[1]))
 
-            print(inf(),'co2 = ',co2,' Tmpr = ',tmpr,' Humi = ',humi)
-            print(inf(),'u_switch = ',flup_on_sts, ' d_switch = ',fldwn_on_sts)
-            print(inf(),'hfr1 = ',humifr_relay1_sts, ' hfr2 = ',humifr_relay2_sts,'\n')
+            # print(inf(),'co2 = ',co2,' Tmpr = ',tmpr,' Humi = ',humi)
+            # print(inf(),'u_switch = ',flup_on_sts, ' d_switch = ',fldwn_on_sts)
+            # print(inf(),'hfr1 = ',humifr_relay1_sts, ' hfr2 = ',humifr_relay2_sts,'\n')
 
             if send_relay_cmd:
                if relay_cmd:
@@ -157,6 +161,7 @@ def nanoComm(serialport):
          except:
             print(err(),'/dev/ttyUSB0')
             time.sleep(0.5)
+            data_available = False
 
          time.sleep(0.5)
 
@@ -184,7 +189,7 @@ def humiMonitor():
                humifr_running = False
                send_relay_cmd = True
                relay_cmd = False
-               print(colored(inf()+'Humidifier Stopped','red'))
+               print(colored(inf()+'Humidifier Stopped','magenta'))
 
       time.sleep(0.1)
 
@@ -197,40 +202,30 @@ def flswMonitor():
       if data_available:
          if not fldwn_on_sts:
             if curr_time()> notif_pub_time + notif_repeat_dur:
-               print('ALERT!!!!!!!!!!!!!')
-               # client.publish('alphasadabahar007/notifreq',strdatetime())
-               notif_pub_time = curr_time()
+               # print(colored(inf()+'ALERT!!!!!!!!!!!!!','red'))
+               if not pauseNotif():
+                  client.publish('alphasadabahar007/notifreq',strdatetime())
+                  print(inf(),'notification published')
+                  notif_pub_time = curr_time()
       time.sleep(0.5)
 
 flsw_mon_thr = threading.Thread(target=flswMonitor,daemon=True)
 flsw_mon_thr.start()
 
-def publisher():
+# def publisher():
+try:
    while True:
       sensor_dta = str(co2)+','+str(tmpr)+','+str(humi)
       flsw_sts = str(flup_on_sts)+','+str(fldwn_on_sts)
       relay_sts = str(humifr_relay1_sts)+','+str(humifr_relay2_sts)
-
+   
       client.publish('sensor/data',sensor_dta)
       client.publish('flsw/sts',flsw_sts)
-
       client.publish('humifr/relay_sts',relay_sts)
+      time.sleep(0.5)
+   
+except KeyboardInterrupt:
+   # time.sleep(1)
+   print(inf(),'Exitting>>>>>>>>>>>><<<<<<<<<<<')
+   exit()
 
-      time.sleep(1)
-
-pub_thr = threading.Thread(target= publisher, daemon= True)
-pub_thr.start()
-pub_thr.join()
-
-# while True:
-#    #update send_rel _off
-#    # print('up : ',flup_on_sts, humifr_relay1_sts, send_rel_on)
-#    if run_humi and not humifr_relay1_sts and not send_rel_on :
-#       send_rel_on = True
-#       print('set relay on')
-
-#    # print('dwn : ',fldwn_on_sts, humifr_relay2_sts, send_rel_off,'\n')
-#    if not run_humi and humifr_relay2_sts and not send_rel_off:
-#       send_rel_off = True
-#       print('set relay off')
-#    time.sleep(0.1)

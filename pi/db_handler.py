@@ -19,14 +19,15 @@ session = scoped_session(session_factory)
 Base = declarative_base()
 
 class ParamsDb(Base):
-   __tablename__ = 'params_db'
-   sn = Column(Integer,nullable=False,primary_key=True, unique=True)
-   parm = Column(Text,nullable = False)
-   val = Column(Text,nullable = False)
+	__tablename__ = 'params_db'
+	sn = Column(Integer,nullable=False,primary_key=True, unique=True)
+	parm = Column(Text,nullable = False)
+	val = Column(Text,nullable = False)
 
-   def __init__(self,parm,val):
-         self.parm = parm
-         self.val = val
+	def __init__(self,parm,val):
+		self.parm = parm
+		self.val = val
+
 
 if __name__ == '__main__':
 	while True:

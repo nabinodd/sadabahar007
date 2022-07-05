@@ -7,6 +7,8 @@ const int res_flup_pin = 12;
 const int res_fldwn_pin = 11;
 const int humifr_relay1_pin = 2;
 const int humifr_relay2_pin = 3;
+const int led_yel = 5;
+const int led_blue = 6;
 
 int mq135_corr_factor = 4;
 
@@ -38,6 +40,9 @@ void setup()
 {
    pinMode(res_flup_pin, INPUT_PULLUP);
    pinMode(res_fldwn_pin, INPUT_PULLUP);
+   pinMode(led_yel, OUTPUT);
+   pinMode(led_blue, OUTPUT);
+
    // PULLUP IN CKT
    // pinMode(res_flup_pin, INPUT);
    // pinMode(res_fldwn_pin, INPUT);
@@ -177,6 +182,8 @@ void loop()
    }
    if (updateFlsw())
    {
+      digitalWrite(led_blue, res_flup_on_sts);
+      digitalWrite(led_yel, res_fldwn_on_sts);
       // Serial.print("res_flup_on_sts : ");
       // Serial.print(res_flup_on_sts);
       // Serial.print("\tres_fldwn_on_sts : ");

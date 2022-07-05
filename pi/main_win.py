@@ -19,7 +19,7 @@ engine = create_engine(engine_address)
 session = scoped_session(sessionmaker(bind=engine))
 Base = declarative_base()
 
-mqtt_server = ('coldpi.local', 1883, 5)
+mqtt_server = ('xetronixlnx.local', 1883, 5)
 # mqtt_server = ('localhost', 1883, 5)
 
 new_mqtt_data = False
@@ -28,6 +28,9 @@ new_mqtt_data = False
 co2 = ''
 tmpr = ''
 humi = ''
+
+cold_tmpr = ''
+cold_humi = ''
 
 flup_sts = ''
 fldwn_sts = ''
@@ -41,13 +44,15 @@ def client_loop():
 
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code "+str(rc))
-   client.subscribe('sensor/data')
    client.subscribe('flsw/sts')
+   client.subscribe('sensor/data')
    client.subscribe('humifr/relay_sts')
+   client.subscribe('espid/resp/ht_sens')
 
 def on_message(client, userdata, msg):
    global co2, tmpr, humi, new_mqtt_data
    global flup_sts, fldwn_sts, humifr_relay_sts
+   global cold_tmpr, cold_humi
 
    if msg.topic == 'sensor/data':
       dta = msg.payload.decode()
@@ -69,6 +74,14 @@ def on_message(client, userdata, msg):
       humif_dtz = humif_dta.split(',')
       humifr_relay_sts = humif_dtz[0]
       # humifr_r2_sts = humif_dtz[1]
+      new_mqtt_data = True
+
+   if msg.topic == 'espid/resp/ht_sens':
+      coldht_dta = msg.payload.decode()
+      coldht_dtz = coldht_dta.split(',')
+      cold_tmpr = coldht_dtz[1]
+      cold_humi = coldht_dtz[2]
+
       new_mqtt_data = True
 
 client = mqtt.Client('main_win')
@@ -104,8 +117,8 @@ class Main_win_ui(qtw.QMainWindow):
          togglecolor = not togglecolor
          if new_mqtt_data:
             self.m_win.lbl_co2_val.setText(co2)
-            self.m_win.lbl_tmpr_val.setText(tmpr)
-            self.m_win.lbl_humi_val.setText(humi)
+            self.m_win.lbl_tmpr_val.setText(tmpr+'<->'+cold_tmpr)
+            self.m_win.lbl_humi_val.setText(humi+'<->'+cold_humi)
 
             flupsts = 'ON' if flup_sts == 'True' else 'OFF'
             fldwnsts = 'ON' if fldwn_sts == 'True' else 'OFF'

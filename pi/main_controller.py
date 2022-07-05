@@ -32,7 +32,7 @@ hact_dur = int(session.query(ParamsDb.val).filter(ParamsDb.parm=='humifr_act_dur
 mqtt_server = ('localhost', 1883, 5)
 
 
-notif_repeat_dur = 180  #notification repeat duration in seconds
+notif_repeat_dur = 1800  #notification repeat duration in seconds
 notif_pub_time = 0
 
 co2 = 0.0

@@ -20,7 +20,7 @@ session = scoped_session(sessionmaker(bind=engine))
 Base = declarative_base()
 
 mqtt_server = ('coldpi.local', 1883, 5)
-# mqtt_server = ('192.168.31.247', 1883, 5)
+# mqtt_server = ('localhost', 1883, 5)
 
 new_mqtt_data = False
 

@@ -6,8 +6,8 @@ import webrepl
 # esp.osdebug(0)
 # import ntptime
 
-ssid = 'Continuums'
-passw = 'ONETWOTHREEFOUR'
+ssid = 'Bhuvahsys Technologies'
+passw =  'oNETWOTHREEFOUr'
 
 print('\n\n\n\n[OK] boot success')
 

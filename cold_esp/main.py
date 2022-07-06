@@ -16,10 +16,10 @@ sampling_delay = 1
 new_ht_data_req = False
 ht_data_reqtimest =''
 
-SERVER = 'xetronixlnx.local'
+SERVER = 'coldpi.local'
 config['server'] = SERVER
-config['ssid'] = 'Continuums'
-config['wifi_pw'] = 'ONETWOTHREEFOUR'
+config['ssid'] = 'Bhuvahsys Technologies'
+config['wifi_pw'] = 'oNETWOTHREEFOUr'
 
 def readSensor():
    ht_sens.measure()
